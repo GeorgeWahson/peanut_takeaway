@@ -1,6 +1,7 @@
 package com.wahson.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.wahson.common.BaseContext;
 import com.wahson.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -37,6 +38,9 @@ public class LoginCheckFilter implements Filter {
           "/employee/logout",
           "/backend/**",
           "/front/**",
+          "/common/**",
+          "/user/sendMsg",
+          "/user/login"
         };
 
         //2、判断本次请求是否需要处理
@@ -48,9 +52,26 @@ public class LoginCheckFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        //4、判断登录状态，如果已登录，则直接放行
+        //4-1、判断登录状态，如果已登录，则直接放行
         if (request1.getSession().getAttribute("employee") != null) {
             log.info("用户已登录，用户id:{}", request1.getSession().getAttribute("employee"));
+
+            Long empId = (Long) request1.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
+
+            log.info("线程id为：{}", Thread.currentThread().getId());
+            chain.doFilter(request, response);
+            return;
+        }
+
+        //4-2、判断 移动端 登录状态，如果已登录，则直接放行
+        if (request1.getSession().getAttribute("user") != null) {
+            log.info("用户已登录，用户id:{}", request1.getSession().getAttribute("employee"));
+
+            Long empId = (Long) request1.getSession().getAttribute("user");
+            BaseContext.setCurrentId(empId);
+
+            log.info("线程id为：{}", Thread.currentThread().getId());
             chain.doFilter(request, response);
             return;
         }
