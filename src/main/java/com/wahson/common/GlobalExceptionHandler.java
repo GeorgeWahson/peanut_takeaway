@@ -21,13 +21,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public Result<String> exceptionHandler(SQLIntegrityConstraintViolationException e) {
         log.error(e.getMessage());
-        // 如果报错信息中有“Duplicate entry”，说明用户名重复
+        // 如果报错信息中有“Duplicate entry”，说明用户名或分类名重复
         if (e.getMessage().contains("Duplicate entry")) {
             String[] split = e.getMessage().split(" ");
             // Duplicate entry 'zhangsan'
-            String msg = "用户名【" + split[2].substring(1, split[2].length()-1) + "】已存在";
+            String msg = "【" + split[2].substring(1, split[2].length()-1) + "】已存在，请换个名称!";
             return Result.error(msg);
         }
         return Result.error("未知错误。。。");
+    }
+
+    /**
+     * 自定义异常处理方法
+     * @return
+     */
+    @ExceptionHandler(CustomException.class)
+    public Result<String> exceptionHandler(CustomException e) {
+        log.error(e.getMessage());
+
+        return Result.error(e.getMessage());
     }
 }
