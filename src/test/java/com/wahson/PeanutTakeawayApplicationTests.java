@@ -1,5 +1,6 @@
 package com.wahson;
 
+import com.wahson.util.SMSUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -7,7 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PeanutTakeawayApplicationTests {
 
     @Test
-    void contextLoads() {
+    void testFileLoad() {
+        SMSUtils.sendMessage(null,null, null, "1234");
     }
 
 }
