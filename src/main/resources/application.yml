@@ -17,3 +17,10 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
+
+peanut:
+#  path: D:\peanut_takeaway\
+  path: F:\MyCode\person_project\peanut_takeaway\peanut_takeaway\src\main\resources\static\backend\images\dish\
+
+#  .accessKeyId("LTAI5t7F18UfsrZAEPbPkVQL")
+#  .accessKeySecret("wneFogqn1Bh1gr2o504dSwv7a357oe")
