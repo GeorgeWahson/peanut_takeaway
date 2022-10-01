@@ -120,6 +120,17 @@ public class EmployeeController {
         log.info(employee.toString());
         log.info("线程id为：{}", Thread.currentThread().getId());
 
+        // id为1，说明用户修改 管理员账户
+        if (employee.getId() == 1) {
+            // 修改状态，前端只传用户id及status，username为空。
+            if (employee.getStatus() == 0) {
+                // 用户执行了禁用管理员操作
+                return Result.error("不能禁用管理员账户！");
+            } else if ( !"admin".equals(employee.getUsername()) ) {
+                // 用户修改admin用户名
+                return Result.error("不能修改管理员账号名称！");
+            }
+        }
         // 雪花算法id js对long型精度遗失
         employeeService.updateById(employee);
 
