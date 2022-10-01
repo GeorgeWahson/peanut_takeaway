@@ -19,6 +19,12 @@ public class Result<T> {
 
     private Map map = new HashMap(); //动态数据
 
+    /**
+     * 主要返回String类型的结果反馈信息，以及List及entity数据信息。
+     * @param object
+     * @return
+     * @param <T>
+     */
     public static <T> Result<T> success(T object) {
         Result<T> result = new Result<T>();
         result.data = object;
