@@ -72,10 +72,17 @@ public class EmployeeController {
         return Result.success("退出成功！");
     }
 
+    /**
+     * 新增员工
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping
     public Result<String> save(HttpServletRequest request, @RequestBody Employee employee) {
         log.info("新增员工，员工信息：{}", employee.toString());
         //设置初始密码123456，需要进行md5加密处理
+        // 考虑设置自定义密码
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
         employeeService.save(employee);

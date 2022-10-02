@@ -50,6 +50,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
             // 已经关联套餐，抛出一个业务异常
             throw new CustomException("当前分类下关联了套餐，不能删除");
         }
+
         //正常删除分类
         super.removeById(id);
     }
