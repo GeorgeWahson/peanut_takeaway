@@ -9,6 +9,17 @@ spring:
       url: jdbc:mysql://localhost:3306/peanut?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: Wahson11736
+  # redis配置虚拟机
+  redis:
+    host: 192.168.72.128
+    port: 6379
+    password: 123456
+    database: 0
+  cache:
+    redis:
+      # 缓存有效期，单位 ms, 30分钟
+      time-to-live: 1800000
+
 mybatis-plus:
   configuration:
     # 在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
@@ -19,5 +30,5 @@ mybatis-plus:
       id-type: ASSIGN_ID
 
 peanut:
-#  path: D:\peanut_takeaway\
+#  path: D:\peanut_takeaway\ 菜品 套餐图片
   path: F:\MyCode\person_project\peanut_takeaway\peanut_takeaway\src\main\resources\static\backend\images\dish\
