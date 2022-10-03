@@ -43,6 +43,8 @@ public class DishController {
     @Autowired
     private CategoryService categoryService;
 
+
+
     /**
      * 新增菜品
      * @param dishDto
@@ -189,5 +191,32 @@ public class DishController {
 
         return Result.success(dtoList);
     }
+
+
+    @DeleteMapping
+    public Result<String> deleteDish(String ids) {
+        dishService.deleteWithFlavor(ids);
+        return Result.success("删除成功！");
+    }
+
+    /**
+     * 批量，单个 修改菜品状态信息
+     * @param ids
+     * @param dishStatus
+     * @return
+     */
+    @PostMapping("/status/{dishStatus}")
+    public Result<String> statusHandle(@RequestParam String ids, @PathVariable String dishStatus) {
+        log.info("ids: {}, dishStatus: {} ", ids, dishStatus);
+        String[] statusIds = ids.split(",");
+        for (String id : statusIds) {
+            log.info("需要修改状态的id: {}", id);
+            Dish dish = dishService.getById(id);
+            dish.setStatus(Integer.valueOf(dishStatus));
+            dishService.updateById(dish);
+        }
+        return Result.success("修改状态成功!");
+    }
+
 
 }
