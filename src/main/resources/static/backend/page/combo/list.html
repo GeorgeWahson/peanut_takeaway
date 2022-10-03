@@ -52,11 +52,12 @@
       >
         <el-table-column
           type="selection"
-          width="25"
+          width="50"
         ></el-table-column>
         <el-table-column
           prop="name"
           label="套餐名称"
+          width="100"
         ></el-table-column>
         <el-table-column prop="image" label="图片"  align="center">
           <template slot-scope="{ row }">
@@ -229,6 +230,7 @@
           //状态更改
           statusHandle (row) {
             let params = {}
+            // type 为String 为批量操作
             if (typeof row === 'string' ){
               if (this.checkList.length == 0){
                 this.$message.error('批量操作，请先勾选操作菜品！')
