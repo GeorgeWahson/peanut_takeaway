@@ -47,7 +47,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         lqw.eq(ShoppingCart::getUserId, userId);
         List<ShoppingCart> shoppingCartList = shoppingCartService.list(lqw);
 
-        if (shoppingCartList != null || shoppingCartList.size() == 0) {
+        if (shoppingCartList == null || shoppingCartList.size() == 0) {
             throw new CustomException("购物车为空不能下单");
         }
 

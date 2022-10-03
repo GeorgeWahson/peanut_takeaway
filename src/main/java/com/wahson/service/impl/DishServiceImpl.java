@@ -11,9 +11,11 @@ import com.wahson.service.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Autowired
     private DishFlavorService dishFlavorService;
+
+    @Value("${peanut.path}")
+    private String basePath;
 
     /**
      * 新增菜品，同时保存口味数据
@@ -96,4 +101,43 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
         dishFlavorService.saveBatch(flavors);
     }
+
+    /**
+     * 删除菜品的同时删除口味表
+     * @param ids
+     */
+    @Override
+    public void deleteWithFlavor(String ids) {
+        // 前端传入的String类型的id以,分隔
+        String[] idList = ids.split(",");
+        // 对每个id 执行 删除dish表，本地图片，dish_flavor表操作。
+        for (String id : idList) {
+            log.info("被删除的id: {}", id);
+//            LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
+//            lqw.eq(Dish::getId, id);
+            // 获取图片名称，删除图片
+            Dish deleteDish = this.getById(id);
+            String imageName = deleteDish.getImage();
+            File file = new File(basePath + imageName);
+            boolean delete = file.delete();
+            log.info("图片：{}, 删除结果：{}", imageName, delete);
+            // 删除dish_flavor表对应数据
+            LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
+            lqw.eq(DishFlavor::getDishId, id);
+            dishFlavorService.remove(lqw);
+            // 删除dish表数据
+            this.removeById(id);
+        }
+    }
+
+    /**
+     * 批量起售与批量停售
+     * @param ids
+     */
+    @Override
+    public void changeDishStatus(String ids) {
+
+    }
+
+
 }

@@ -3,8 +3,10 @@ package com.wahson.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wahson.common.Result;
+import com.wahson.dto.DishDto;
 import com.wahson.dto.SetmealDto;
 import com.wahson.entity.Category;
+import com.wahson.entity.Dish;
 import com.wahson.entity.Setmeal;
 import com.wahson.service.CategoryService;
 import com.wahson.service.SetmealDishService;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -92,6 +95,11 @@ public class SetmealController {
         return Result.success(dtoPage);
     }
 
+    /**
+     * 删除套餐同时删除setmeal_dish表数据
+     * @param ids
+     * @return
+     */
     @DeleteMapping
     public Result<String> delete(@RequestParam List<Long> ids) {
         log.info("ids：{}", ids);
@@ -100,7 +108,7 @@ public class SetmealController {
     }
 
     /**
-     * 根据条件查询套餐数据
+     * 手机端 套餐内
      * 前端发请求为：http://localhost:8080/setmeal/list?categoryId=1574026245941882881&status=1
      * @param setmeal
      * @return
@@ -117,4 +125,33 @@ public class SetmealController {
 
         return Result.success(list);
     }
+
+    @GetMapping("/{id}")
+    public Result<SetmealDto> get(@PathVariable Long id) {
+        log.info("get id for update setmeal: {}", id);
+        SetmealDto setmealDto = setmealService.getWithDish(id);
+        return Result.success(setmealDto);
+    }
+
+
+    @PutMapping
+    public Result<String> update(@RequestBody SetmealDto setmealDto) {
+        log.info("setmealDto: {}", setmealDto.toString());
+        setmealService.updateWithDish(setmealDto);
+
+        return Result.success("修改套餐成功!");
+    }
+
+    /**
+     * 单个及批量 起售与停售
+     * @param ids
+     * @param setmealStatus
+     * @return
+     */
+    @PostMapping("/status/{setmealStatus}")
+    public Result<String> statusHandle(@RequestParam String ids, @PathVariable String setmealStatus) {
+        setmealService.statusHandle(ids, setmealStatus);
+        return Result.success("修改状态成功!");
+    }
+
 }
